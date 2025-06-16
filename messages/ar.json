@@ -1,0 +1,86 @@
+{
+  "home": {
+    "title": "إدارة المستخدمين"
+  },
+  "table": {
+    "title": "المستخدمين",
+    "createUser": "إضافة +",
+    "goToPage": "انتقل إلى الصفحة...",
+    "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني أو رقم الحساب...",
+    "columns": {
+      "accountNumber": "رقم الحساب",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "currency": "العملة",
+      "type": "النوع",
+      "actions": "الإجراءات"
+    },
+    "pagination": {
+      "of": "من",
+      "goTo": "انتقل إلى",
+      "page": "صفحة",
+      "firstPage": "الصفحة الأولى",
+      "lastPage": "الصفحة الأخيرة"
+    },
+    "actions": {
+      "edit": "تعديل",
+      "delete": "حذف"
+    }
+  },
+  "users": {
+    "createUser": "إنشاء مستخدم جديد",
+    "editUser": "تعديل المستخدم",
+    "form": {
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "age": "العمر",
+      "gender": "الجنس",
+      "accountNumber": "رقم الحساب",
+      "currency": "العملة",
+      "type": "النوع",
+      "selectGender": "اختر الجنس",
+      "selectCurrency": "اختر العملة",
+      "selectType": "اختر النوع",
+      "male": "ذكر",
+      "female": "أنثى",
+      "save": "حفظ",
+      "saving": "جاري الحفظ...",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "deleteConfirmation": "هل أنت متأكد من حذف هذا المستخدم؟",
+      "cancel": "إلغاء",
+      "backToList": "العودة إلى قائمة المستخدمين"
+    }
+  },
+  "form": {
+    "editUser": "تعديل الجهاز",
+    "fields": {
+      "accountNumber": "رقم الحساب",
+      "name": "الاسم",
+      "currency": "العملة",
+      "type": "النوع"
+    },
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "deleteConfirmation": "هل أنت متأكد من حذف هذا الجهاز؟",
+    "create": {
+      "title": "إضافة جهاز"
+    },
+    "update": {
+      "title": "تعديل جهاز"
+    }
+  },
+  "userDetails": {
+    "title": "تفاصيل المستخدم",
+    "company": {
+      "title": "معلومات الشركة",
+      "department": "القسم",
+      "name": "اسم الشركة",
+      "title": "المسمى الوظيفي",
+      "address": "عنوان الشركة"
+    }
+  }
+} 
