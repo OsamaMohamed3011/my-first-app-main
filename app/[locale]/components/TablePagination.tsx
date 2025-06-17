@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { FaAngleDoubleLeft, FaAngleLeft, FaAngleRight, FaAngleDoubleRight } from 'react-icons/fa';
 
 interface TablePaginationProps {
   currentPage: number;
@@ -45,9 +46,7 @@ export default function TablePagination({
             } w-8 h-8 flex items-center justify-center transition-colors`}
             title={t('firstPage')}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={isRTL ? 'rotate-180' : ''}>
-              <path d="M13 12L9 8L13 4M7 12L3 8L7 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <FaAngleDoubleLeft className={`w-3.5 h-3.5 ${isRTL ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Previous Page Button */}
@@ -60,9 +59,7 @@ export default function TablePagination({
                 : 'text-white hover:bg-[#2D7B52] bg-[#1B4D3E]'
             } w-8 h-8 flex items-center justify-center transition-colors`}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={isRTL ? 'rotate-180' : ''}>
-              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <FaAngleLeft className={`w-3.5 h-3.5 ${isRTL ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Next Page Button */}
@@ -75,9 +72,7 @@ export default function TablePagination({
                 : 'text-white hover:bg-[#2D7B52] bg-[#1B4D3E]'
             } w-8 h-8 flex items-center justify-center transition-colors`}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={isRTL ? 'rotate-180' : ''}>
-              <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <FaAngleRight className={`w-3.5 h-3.5 ${isRTL ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Last Page Button */}
@@ -91,9 +86,7 @@ export default function TablePagination({
             } w-8 h-8 flex items-center justify-center transition-colors`}
             title={t('lastPage')}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={isRTL ? 'rotate-180' : ''}>
-              <path d="M3 12L7 8L3 4M9 12L13 8L9 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <FaAngleDoubleRight className={`w-3.5 h-3.5 ${isRTL ? 'rotate-180' : ''}`} />
           </button>
         </div>
 

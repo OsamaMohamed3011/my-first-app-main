@@ -85,7 +85,7 @@ export default function UserForm({ user, onSuccess, onCancel, onDelete }: UserFo
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto p-6">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto p-6 rtl:text-right">
       <h2 className="text-2xl font-semibold text-[#1B4D3E] mb-8">{t('editUser')}</h2>
 
       {error && (
@@ -97,7 +97,7 @@ export default function UserForm({ user, onSuccess, onCancel, onDelete }: UserFo
       <div className="space-y-4">
         {/* Account Number - Disabled */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1 rtl:text-right">
             {t('fields.accountNumber')}
           </label>
           <input
@@ -111,7 +111,7 @@ export default function UserForm({ user, onSuccess, onCancel, onDelete }: UserFo
 
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1 rtl:text-right">
             {t('fields.name')}
           </label>
           <input
@@ -126,7 +126,7 @@ export default function UserForm({ user, onSuccess, onCancel, onDelete }: UserFo
 
         {/* Currency */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1 rtl:text-right">
             {t('fields.currency')}
           </label>
           <select
@@ -144,7 +144,7 @@ export default function UserForm({ user, onSuccess, onCancel, onDelete }: UserFo
 
         {/* Type - Disabled */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1 rtl:text-right">
             {t('fields.type')}
           </label>
           <input
@@ -157,7 +157,7 @@ export default function UserForm({ user, onSuccess, onCancel, onDelete }: UserFo
         </div>
       </div>
 
-      <div className="flex justify-between mt-8">
+      <div className="flex justify-between mt-8 rtl:flex-row-reverse">
         {/* Delete Button */}
         <button
           type="button"

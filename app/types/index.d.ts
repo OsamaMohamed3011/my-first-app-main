@@ -162,3 +162,10 @@ export type ApiResponse<T> = {
   status: number;
   message?: string;
 }
+export type ColumnConfig = {
+  key: keyof User | 'actions' | 'name';
+  label: string;
+  width?: string;
+  sortable?: boolean;
+  render?: (user: User) => React.ReactNode;
+};

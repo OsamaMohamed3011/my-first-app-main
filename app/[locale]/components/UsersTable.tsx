@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { API_ENDPOINTS, USERS_PER_PAGE, makeApiRequest } from '@/app/lib/api';
 import { transformUsersList } from '@/app/utils/userHelpers';
 import type { User, UsersResponse } from '@/app/types';
+import { userTableColumns } from '@/app/constants/tableConfig';
 import TableHeader from './TableHeader';
 import TablePagination from './TablePagination';
 import UserTableRow from './UserTableRow';
@@ -113,24 +114,14 @@ export default function UsersTable() {
         <table className="w-full border-collapse h-full" dir={isRTL ? 'rtl' : 'ltr'}>
           <thead>
             <tr className="bg-[#D5E2B5]">
-              <th className="px-4 py-2 font-normal text-sm text-[#1B4D3E] w-1/6 text-center border-x border-[#2D7B52]">
-                {t('columns.accountNumber')}
-              </th>
-              <th className="px-4 py-2 font-normal text-sm text-[#1B4D3E] w-1/6 text-center border-x border-[#2D7B52]">
-                {t('columns.name')}
-              </th>
-              <th className="px-4 py-2 font-normal text-sm text-[#1B4D3E] w-1/6 text-center border-x border-[#2D7B52]">
-                {t('columns.email')}
-              </th>
-              <th className="px-4 py-2 font-normal text-sm text-[#1B4D3E] w-1/6 text-center border-x border-[#2D7B52]">
-                {t('columns.currency')}
-              </th>
-              <th className="px-4 py-2 font-normal text-sm text-[#1B4D3E] w-1/6 text-center border-x border-[#2D7B52]">
-                {t('columns.type')}
-              </th>
-              <th className="px-4 py-2 font-normal text-sm text-[#1B4D3E] w-1/6 text-center border-x border-[#2D7B52]">
-                {t('columns.actions')}
-              </th>
+              {userTableColumns.map((column) => (
+                <th
+                  key={column.key}
+                  className={`px-4 py-2 font-normal text-sm text-[#1B4D3E] ${column.width} text-center border-x border-[#2D7B52]`}
+                >
+                  {t(column.label)}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -145,7 +136,7 @@ export default function UsersTable() {
           </tbody>
           <tfoot>
             <tr className="bg-white border-t border-[#E8F1ED]">
-              <td colSpan={6}>
+              <td colSpan={userTableColumns.length}>
                 <TablePagination
                   currentPage={currentPage}
                   totalPages={totalPages}
