@@ -80,9 +80,19 @@ export default function UsersTable() {
     router.push(`/${locale}/users/${userId}/edit`);
   };
 
+  const handleDeleteUser = async (userId: number) => {
+    if (!window.confirm(t('deleteConfirmation', { ns: 'form' }))) return;
+    try {
+      await makeApiRequest(API_ENDPOINTS.users.delete(userId), { method: 'DELETE' });
+      setLastUpdatedId(userId); // Triggers refresh
+    } catch (err) {
+      alert('Failed to delete user.');
+    }
+  };
+
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-[#1B4D3E] bg-opacity-90 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-info-dark bg-opacity-90 flex items-center justify-center z-50">
         <div className="text-white text-lg font-bold">Loading...</div>
       </div>
     );
@@ -90,7 +100,7 @@ export default function UsersTable() {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-sm text-center">
+      <div className="bg-red-50 border border-red-200 text-error-main p-4 rounded-sm text-center">
         {error}
         <button
           onClick={fetchUsers}
@@ -113,11 +123,11 @@ export default function UsersTable() {
       <div className="overflow-x-auto flex-grow">
         <table className="w-full border-collapse h-full" dir={isRTL ? 'rtl' : 'ltr'}>
           <thead>
-            <tr className="bg-[#D5E2B5]">
+            <tr className="bg-info-light">
               {userTableColumns.map((column) => (
                 <th
                   key={column.key}
-                  className={`px-4 py-2 font-normal text-sm text-[#1B4D3E] ${column.width} text-center border-x border-[#2D7B52]`}
+                  className={`px-4 py-2 font-normal text-sm text-info-dark ${column.width} text-center border-x border-success-main`}
                 >
                   {t(column.label)}
                 </th>
@@ -131,11 +141,12 @@ export default function UsersTable() {
                 user={user}
                 index={index}
                 onEdit={handleEditUser}
+                onDelete={handleDeleteUser}
               />
             ))}
           </tbody>
           <tfoot>
-            <tr className="bg-white border-t border-[#E8F1ED]">
+            <tr className="bg-white border-t border-info-main">
               <td colSpan={userTableColumns.length}>
                 <TablePagination
                   currentPage={currentPage}

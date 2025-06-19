@@ -41,8 +41,8 @@ export default function TablePagination({
             disabled={currentPage === 1}
             className={`p-1.5 rounded-full ${
               currentPage === 1
-                ? 'text-gray-400 cursor-not-allowed bg-gray-100'
-                : 'text-white hover:bg-[#2D7B52] bg-[#1B4D3E]'
+                ? 'text-secondary-main cursor-not-allowed bg-secondary-light'
+                : 'text-white hover:bg-success-main bg-info-dark'
             } w-8 h-8 flex items-center justify-center transition-colors`}
             title={t('firstPage')}
           >
@@ -55,8 +55,8 @@ export default function TablePagination({
             disabled={currentPage === 1}
             className={`p-1.5 rounded-full ${
               currentPage === 1
-                ? 'text-gray-400 cursor-not-allowed bg-gray-100'
-                : 'text-white hover:bg-[#2D7B52] bg-[#1B4D3E]'
+                ? 'text-secondary-main cursor-not-allowed bg-secondary-light'
+                : 'text-white hover:bg-success-main bg-info-dark'
             } w-8 h-8 flex items-center justify-center transition-colors`}
           >
             <FaAngleLeft className={`w-3.5 h-3.5 ${isRTL ? 'rotate-180' : ''}`} />
@@ -68,8 +68,8 @@ export default function TablePagination({
             disabled={currentPage === maxPages}
             className={`p-1.5 rounded-full ${
               currentPage === maxPages
-                ? 'text-gray-400 cursor-not-allowed bg-gray-100'
-                : 'text-white hover:bg-[#2D7B52] bg-[#1B4D3E]'
+                ? 'text-secondary-main cursor-not-allowed bg-secondary-light'
+                : 'text-white hover:bg-success-main bg-info-dark'
             } w-8 h-8 flex items-center justify-center transition-colors`}
           >
             <FaAngleRight className={`w-3.5 h-3.5 ${isRTL ? 'rotate-180' : ''}`} />
@@ -81,8 +81,8 @@ export default function TablePagination({
             disabled={currentPage === maxPages}
             className={`p-1.5 rounded-full ${
               currentPage === maxPages
-                ? 'text-gray-400 cursor-not-allowed bg-gray-100'
-                : 'text-white hover:bg-[#2D7B52] bg-[#1B4D3E]'
+                ? 'text-secondary-main cursor-not-allowed bg-secondary-light'
+                : 'text-white hover:bg-success-main bg-info-dark'
             } w-8 h-8 flex items-center justify-center transition-colors`}
             title={t('lastPage')}
           >
@@ -92,7 +92,7 @@ export default function TablePagination({
 
         {/* Page Input */}
         <div className="flex items-center gap-2">
-          <div className="text-sm font-medium text-[#1B4D3E] whitespace-nowrap">
+          <div className="text-sm font-medium text-info-dark whitespace-nowrap">
             {t('page')} {currentPage} {t('of')} {maxPages} {t('goTo')}
           </div>
           <input
@@ -100,7 +100,7 @@ export default function TablePagination({
             defaultValue={currentPage}
             onKeyDown={handlePageInput}
             onFocus={(e) => e.target.select()}
-            className="w-[40px] py-1 text-sm border border-[#2D7B52] rounded-sm focus:outline-none focus:border-[#2D7B52] bg-white text-center"
+            className="w-[40px] py-1 text-sm border border-success-main rounded-sm focus:outline-none focus:border-success-dark bg-white text-center"
           />
         </div>
       </div>

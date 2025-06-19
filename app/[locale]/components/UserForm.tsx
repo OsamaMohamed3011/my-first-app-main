@@ -5,12 +5,12 @@ import { useState } from 'react';
 import { API_ENDPOINTS, makeApiRequest } from '@/app/lib/api';
 import { prepareUserDataForApi } from '@/app/utils/userHelpers';
 import type { UserFormProps, UserFormData, User } from '@/app/types';
+import { userTableColumns } from '@/app/constants/tableConfig';
 
-export default function UserForm({ user, onSuccess, onCancel, onDelete }: UserFormProps) {
+export default function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
   const t = useTranslations('form');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState<UserFormData>({
@@ -45,28 +45,6 @@ export default function UserForm({ user, onSuccess, onCancel, onDelete }: UserFo
     }
   };
 
-  // Handle delete
-  const handleDelete = async () => {
-    if (!window.confirm(t('deleteConfirmation'))) {
-      return;
-    }
-
-    setIsDeleting(true);
-    setError(null);
-
-    try {
-      await makeApiRequest(API_ENDPOINTS.users.delete(user.id), {
-        method: 'DELETE',
-      });
-
-      onDelete();
-    } catch (err) {
-      console.error('Error deleting user:', err);
-      setError('Failed to delete user. Please try again.');
-      setIsDeleting(false);
-    }
-  };
-
   // Handle form field changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -79,114 +57,141 @@ export default function UserForm({ user, onSuccess, onCancel, onDelete }: UserFo
   // Handle cancel click
   const handleCancel = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!loading && !isDeleting) {
+    if (!loading) {
       onCancel();
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto p-6 rtl:text-right">
-      <h2 className="text-2xl font-semibold text-[#1B4D3E] mb-8">{t('editUser')}</h2>
+    <>
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto p-6 rtl:text-right">
+        <h2 className="text-2xl font-semibold text-info-dark mb-8">{t('editUser')}</h2>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-sm mb-6">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-error-main p-4 rounded-sm mb-6">
+            {error}
+          </div>
+        )}
 
-      <div className="space-y-4">
-        {/* Account Number - Disabled */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1 rtl:text-right">
-            {t('fields.accountNumber')}
-          </label>
-          <input
-            type="text"
-            name="accountNumber"
-            value={formData.accountNumber}
-            disabled
-            className="w-full px-3 py-2 border border-gray-300 rounded-sm bg-gray-50 text-gray-500 cursor-not-allowed"
-          />
+        <div className="space-y-4">
+          {/* Account Number - Disabled */}
+          <div>
+            <label className="block text-sm font-medium text-text-dark mb-1 rtl:text-right">
+              {t('fields.accountNumber')}
+            </label>
+            <input
+              type="text"
+              name="accountNumber"
+              value={formData.accountNumber}
+              disabled
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm bg-secondary-light text-text-dark cursor-not-allowed"
+            />
+          </div>
+
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-medium text-text-dark mb-1 rtl:text-right">
+              {t('fields.name')}
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-success-main rounded-sm focus:outline-none focus:border-info-dark"
+            />
+          </div>
+
+          {/* Currency */}
+          <div>
+            <label className="block text-sm font-medium text-text-dark mb-1 rtl:text-right">
+              {t('fields.currency')}
+            </label>
+            <select
+              name="currency"
+              value={formData.currency}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-success-main rounded-sm focus:outline-none focus:border-info-dark"
+            >
+              <option value="SAR">SAR</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+
+          {/* Type - Disabled */}
+          <div>
+            <label className="block text-sm font-medium text-text-dark mb-1 rtl:text-right">
+              {t('fields.type')}
+            </label>
+            <input
+              type="text"
+              name="type"
+              value={formData.type}
+              disabled
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm bg-secondary-light text-text-dark cursor-not-allowed"
+            />
+          </div>
         </div>
 
-        {/* Name */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1 rtl:text-right">
-            {t('fields.name')}
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-[#2D7B52] rounded-sm focus:outline-none focus:border-[#1B4D3E]"
-          />
+        <div className="flex justify-between mt-8 rtl:flex-row-reverse">
+          {/* Action Buttons */}
+          <div className="flex gap-3 ml-auto">
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="px-4 py-2 text-sm border border-success-main text-success-main rounded-sm hover:bg-info-main transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading}
+            >
+              {t('cancel')}
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm bg-success-main text-white rounded-sm hover:bg-success-dark transition-colors disabled:bg-secondary-main disabled:cursor-not-allowed"
+              disabled={loading}
+            >
+              {loading ? '...' : t('save')}
+            </button>
+          </div>
         </div>
+      </form>
 
-        {/* Currency */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1 rtl:text-right">
-            {t('fields.currency')}
-          </label>
-          <select
-            name="currency"
-            value={formData.currency}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-[#2D7B52] rounded-sm focus:outline-none focus:border-[#1B4D3E]"
-          >
-            <option value="SAR">SAR</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-          </select>
-        </div>
-
-        {/* Type - Disabled */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1 rtl:text-right">
-            {t('fields.type')}
-          </label>
-          <input
-            type="text"
-            name="type"
-            value={formData.type}
-            disabled
-            className="w-full px-3 py-2 border border-gray-300 rounded-sm bg-gray-50 text-gray-500 cursor-not-allowed"
-          />
-        </div>
+      {/* User Table Mapping */}
+      <div className="max-w-2xl mx-auto mt-10">
+        <h3 className="text-lg font-semibold mb-4">User Data Mapping</h3>
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-info-light">
+              {userTableColumns.map((col) => (
+                <th key={col.key} className="px-4 py-2 text-info-dark border border-success-main text-center text-sm font-normal">
+                  {col.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="bg-white">
+              {userTableColumns.map((col) => (
+                <td key={col.key} className="px-4 py-2 border border-info-main text-center text-sm">
+                  {col.key === 'actions'
+                    ? null
+                    : col.render
+                      ? col.render(user)
+                      : (() => {
+                          const value = user[col.key as keyof User];
+                          if (typeof value === 'object' && value !== null) {
+                            return JSON.stringify(value);
+                          }
+                          return value as React.ReactNode;
+                        })()}
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <div className="flex justify-between mt-8 rtl:flex-row-reverse">
-        {/* Delete Button */}
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="px-4 py-2 text-sm bg-red-600 text-white rounded-sm hover:bg-red-700 transition-colors disabled:bg-red-300 disabled:cursor-not-allowed"
-          disabled={loading || isDeleting}
-        >
-          {isDeleting ? '...' : t('delete')}
-        </button>
-
-        {/* Action Buttons */}
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="px-4 py-2 text-sm border border-[#2D7B52] text-[#2D7B52] rounded-sm hover:bg-[#F5F9F7] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading || isDeleting}
-          >
-            {t('cancel')}
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 text-sm bg-[#2D7B52] text-white rounded-sm hover:bg-[#236B42] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-            disabled={loading || isDeleting}
-          >
-            {loading ? '...' : t('save')}
-          </button>
-        </div>
-      </div>
-    </form>
+    </>
   );
 } 

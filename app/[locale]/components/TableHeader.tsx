@@ -14,11 +14,11 @@ export default function TableHeader({ onSearch, onAddClick, isRTL }: TableHeader
   const t = useTranslations('table');
 
   return (
-    <div className="flex justify-between items-center px-4 py-3 bg-[#1B4D3E]">
+    <div className="flex justify-between items-center px-4 py-3 bg-info-dark">
       <div className="flex items-center gap-4">
         <button
           onClick={onAddClick}
-          className="bg-[#2D7B52] text-white px-3 py-1.5 text-sm rounded-sm hover:bg-[#236B42] transition-colors"
+          className="bg-success-main text-white px-3 py-1.5 text-sm rounded-sm hover:bg-success-dark transition-colors"
         >
           {t('createUser')}
         </button>
@@ -27,10 +27,10 @@ export default function TableHeader({ onSearch, onAddClick, isRTL }: TableHeader
             type="text"
             onChange={(e) => onSearch(e.target.value)}
             placeholder={t('searchPlaceholder')}
-            className={`w-[300px] ${isRTL ? 'pr-8 pl-3' : 'pl-8 pr-3'} py-1.5 text-sm border border-[#2D7B52] rounded-sm focus:outline-none focus:border-[#2D7B52] bg-white`}
+            className={`w-[300px] ${isRTL ? 'pr-8 pl-3' : 'pl-8 pr-3'} py-1.5 text-sm border border-success-main rounded-sm focus:outline-none focus:border-success-dark bg-white`}
           />
           <FaSearch
-            className={`absolute ${isRTL ? 'right-2.5' : 'left-2.5'} top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5`}
+            className={`absolute ${isRTL ? 'right-2.5' : 'left-2.5'} top-1/2 transform -translate-y-1/2 text-secondary-main w-3.5 h-3.5`}
           />
         </div>
         <LanguageSwitcher />

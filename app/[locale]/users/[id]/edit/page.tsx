@@ -15,10 +15,8 @@ export default function EditUserPage() {
   const userId = params.id as string;
 
   const [loading, setLoading] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Fetch user data when component mounts
   useEffect(() => {
@@ -71,30 +69,6 @@ export default function EditUserPage() {
       setError('Failed to update user. Please try again.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      setDeleteLoading(true);
-      setError(null);
-
-      const endpoint = API_ENDPOINTS.users.delete(parseInt(userId));
-      await makeApiRequest(endpoint, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // Navigate back to users list and refresh
-      router.push(`/${locale}`);
-      router.refresh();
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      setError('Failed to delete user. Please try again.');
-    } finally {
-      setDeleteLoading(false);
-      setShowDeleteConfirm(false);
     }
   };
 
@@ -264,15 +238,6 @@ export default function EditUserPage() {
         </div>
 
         <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => setShowDeleteConfirm(true)}
-            disabled={deleteLoading}
-            className="px-4 py-2 text-sm border border-red-500 text-red-500 rounded-sm hover:bg-red-50 disabled:opacity-50"
-          >
-            {deleteLoading ? t('form.deleting') : t('form.delete')}
-          </button>
-
           <div className="flex space-x-4">
             <button
               type="button"
@@ -291,32 +256,6 @@ export default function EditUserPage() {
           </div>
         </div>
       </form>
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-sm max-w-md w-full mx-4">
-            <h2 className="text-xl font-semibold text-[#1B4D3E] mb-4">
-              {t('form.deleteConfirmation')}
-            </h2>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
-              >
-                {t('form.cancel')}
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={deleteLoading}
-                className="px-4 py-2 text-sm bg-red-500 text-white rounded-sm hover:bg-red-600 disabled:opacity-50"
-              >
-                {deleteLoading ? t('form.deleting') : t('form.delete')}
-              </button>
-            </div>
-          </div>
-      </div>
-      )}
     </div>
   );
 } 

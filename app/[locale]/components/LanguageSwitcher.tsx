@@ -13,7 +13,7 @@ export default function LanguageSwitcher() {
   return (
     <Link 
       href={newPath}
-      className="px-3 py-1.5 rounded bg-[#35795D] text-white transition-colors duration-200 no-underline text-sm flex items-center gap-2 h-8 hover:bg-[#2A6348] ltr:right-4 rtl:left-4"
+      className="px-3 py-1.5 rounded bg-success-main text-white transition-colors duration-200 no-underline text-sm flex items-center gap-2 h-8 hover:bg-success-dark ltr:right-4 rtl:left-4"
     >
       <FaGlobe className="w-4 h-4" />
       {isEnglish ? 'العربية' : 'English'}

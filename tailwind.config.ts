@@ -1,14 +1,11 @@
 import type { Config } from "tailwindcss";
 import colors from "./colors";
 
-
-
-
 export default {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './app/**/*.{js,ts,jsx,tsx}', // For Next.js 13+ (app directory)
+    './pages/**/*.{js,ts,jsx,tsx}', // For Next.js 12 or earlier (pages directory)
+    './components/**/*.{js,ts,jsx,tsx}', // Include components
   ],
   theme: {
     extend: {
