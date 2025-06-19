@@ -6,6 +6,7 @@ import { API_ENDPOINTS, makeApiRequest } from '@/app/lib/api';
 import { prepareUserDataForApi } from '@/app/utils/userHelpers';
 import type { UserFormProps, UserFormData, User } from '@/app/types';
 import { userTableColumns } from '@/app/constants/tableConfig';
+import FormField from './FormField';
 
 export default function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
   const t = useTranslations('form');
@@ -19,6 +20,43 @@ export default function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
     currency: user.currency, 
     type: user.type
   });
+
+  // Form fields configuration
+  const formFields = [
+    {
+      label: t('fields.accountNumber'),
+      name: 'accountNumber',
+      type: 'text' as const,
+      value: formData.accountNumber,
+      disabled: true
+    },
+    {
+      label: t('fields.name'),
+      name: 'name',
+      type: 'text' as const,
+      value: formData.name,
+      required: true
+    },
+    {
+      label: t('fields.currency'),
+      name: 'currency',
+      type: 'select' as const,
+      value: formData.currency,
+      required: true,
+      options: [
+        { value: 'SAR', label: 'SAR' },
+        { value: 'USD', label: 'USD' },
+        { value: 'EUR', label: 'EUR' }
+      ]
+    },
+    {
+      label: t('fields.type'),
+      name: 'type',
+      type: 'text' as const,
+      value: formData.type,
+      disabled: true
+    }
+  ];
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,85 +112,37 @@ export default function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
         )}
 
         <div className="space-y-4">
-          {/* Account Number - Disabled */}
-          <div>
-            <label className="block text-sm font-medium text-text-dark mb-1 rtl:text-right">
-              {t('fields.accountNumber')}
-            </label>
-            <input
-              type="text"
-              name="accountNumber"
-              value={formData.accountNumber}
-              disabled
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm bg-secondary-light text-text-dark cursor-not-allowed"
-            />
-          </div>
-
-          {/* Name */}
-          <div>
-            <label className="block text-sm font-medium text-text-dark mb-1 rtl:text-right">
-              {t('fields.name')}
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
+          {formFields.map((field) => (
+            <FormField
+              key={field.name}
+              label={field.label}
+              name={field.name}
+              type={field.type}
+              value={field.value}
               onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-success-main rounded-sm focus:outline-none focus:border-info-dark"
+              required={field.required}
+              disabled={field.disabled}
+              options={field.options}
             />
-          </div>
-
-          {/* Currency */}
-          <div>
-            <label className="block text-sm font-medium text-text-dark mb-1 rtl:text-right">
-              {t('fields.currency')}
-            </label>
-            <select
-              name="currency"
-              value={formData.currency}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-success-main rounded-sm focus:outline-none focus:border-info-dark"
-            >
-              <option value="SAR">SAR</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-          </div>
-
-          {/* Type - Disabled */}
-          <div>
-            <label className="block text-sm font-medium text-text-dark mb-1 rtl:text-right">
-              {t('fields.type')}
-            </label>
-            <input
-              type="text"
-              name="type"
-              value={formData.type}
-              disabled
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm bg-secondary-light text-text-dark cursor-not-allowed"
-            />
-          </div>
+          ))}
         </div>
 
-        <div className="flex justify-between mt-8 rtl:flex-row-reverse">
-          {/* Action Buttons */}
-          <div className="flex gap-3 ml-auto">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-4">
             <button
               type="button"
               onClick={handleCancel}
-              className="px-4 py-2 text-sm border border-success-main text-success-main rounded-sm hover:bg-info-main transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading}
+              className="px-4 py-2 text-sm border border-success-main text-success-main rounded-sm hover:bg-info-main disabled:opacity-50"
             >
               {t('cancel')}
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm bg-success-main text-white rounded-sm hover:bg-success-dark transition-colors disabled:bg-secondary-main disabled:cursor-not-allowed"
               disabled={loading}
+              className="px-4 py-2 text-sm bg-success-main text-white rounded-sm hover:bg-success-dark disabled:opacity-50"
             >
-              {loading ? '...' : t('save')}
+              {loading ? t('saving') : t('save')}
             </button>
           </div>
         </div>

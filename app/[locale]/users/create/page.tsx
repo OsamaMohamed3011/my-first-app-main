@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useParams } from 'next/navigation';
 import { useState } from 'react';
 import { API_ENDPOINTS, makeApiRequest } from '@/app/lib/api';
-import { userTableColumns } from '@/app/constants/tableConfig';
+import FormField from '@/app/[locale]/components/FormField';
 
 export default function CreateUserPage() {
   const t = useTranslations('users');
@@ -14,21 +14,107 @@ export default function CreateUserPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    age: '',
+    gender: '',
+    currency: '',
+    type: ''
+  });
+
+  // Form fields configuration
+  const formFields = [
+    {
+      label: t('form.firstName'),
+      name: 'firstName',
+      type: 'text' as const,
+      value: formData.firstName,
+      required: true
+    },
+    {
+      label: t('form.lastName'),
+      name: 'lastName',
+      type: 'text' as const,
+      value: formData.lastName,
+      required: true
+    },
+    {
+      label: t('form.email'),
+      name: 'email',
+      type: 'email' as const,
+      value: formData.email,
+      required: true
+    },
+    {
+      label: t('form.phone'),
+      name: 'phone',
+      type: 'tel' as const,
+      value: formData.phone,
+      required: true
+    },
+    {
+      label: t('form.age'),
+      name: 'age',
+      type: 'number' as const,
+      value: formData.age,
+      required: true,
+      min: 18,
+      max: 100
+    },
+    {
+      label: t('form.gender'),
+      name: 'gender',
+      type: 'select' as const,
+      value: formData.gender,
+      required: true,
+      options: [
+        { value: 'male', label: t('form.male') },
+        { value: 'female', label: t('form.female') }
+      ]
+    },
+    {
+      label: t('form.currency'),
+      name: 'currency',
+      type: 'select' as const,
+      value: formData.currency,
+      required: true,
+      options: [
+        { value: 'SAR', label: 'SAR' },
+        { value: 'USD', label: 'USD' },
+        { value: 'EUR', label: 'EUR' }
+      ]
+    },
+    {
+      label: t('form.type'),
+      name: 'type',
+      type: 'select' as const,
+      value: formData.type,
+      required: true,
+      options: [
+        { value: 'ATM', label: 'ATM' },
+        { value: 'POS', label: 'POS' }
+      ]
+    }
+  ];
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const formData = new FormData(e.currentTarget);
     const userData = {
-      firstName: formData.get('firstName'),
-      lastName: formData.get('lastName'),
-      email: formData.get('email'),
-      phone: formData.get('phone'),
-      age: parseInt(formData.get('age') as string),
-      gender: formData.get('gender'),
-      currency: formData.get('currency'),
-      type: formData.get('type')
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      age: parseInt(formData.age),
+      gender: formData.gender,
+      currency: formData.currency,
+      type: formData.type
     };
 
     try {
@@ -51,6 +137,15 @@ export default function CreateUserPage() {
     }
   };
 
+  // Handle form field changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   if (loading) {
     return (
       <div className="fixed inset-0 bg-info-dark bg-opacity-90 flex items-center justify-center z-50">
@@ -65,158 +160,32 @@ export default function CreateUserPage() {
         {t('createUser')}
       </h1>
 
-      {/* User Table Mapping - Empty State */}
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-4 text-info-dark">User Data Mapping</h2>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-info-light">
-              {userTableColumns.map((col) => (
-                <th key={col.key} className="px-4 py-2 text-info-dark border border-success-main text-center text-sm font-normal">
-                  {col.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="bg-white">
-              {userTableColumns.map((col) => (
-                <td key={col.key} className="px-4 py-2 border border-info-main text-center text-sm text-secondary-main">
-                  {col.key === 'actions' ? 'N/A' : '—'}
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-sm mb-6 text-center">
+        <div className="bg-red-50 border border-red-200 text-error-main p-4 rounded-sm mb-6">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.firstName')}
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              required
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
+          {formFields.map((field) => (
+            <FormField
+              key={field.name}
+              label={field.label}
+              name={field.name}
+              type={field.type}
+              value={field.value}
+              onChange={handleChange}
+              required={field.required}
+              options={field.options}
+              min={field.min}
+              max={field.max}
             />
-          </div>
-
-          <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.lastName')}
-            </label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              required
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.email')}
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.phone')}
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              required
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="age" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.age')}
-            </label>
-            <input
-              type="number"
-              id="age"
-              name="age"
-              min="18"
-              max="100"
-              required
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="gender" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.gender')}
-            </label>
-            <select
-              id="gender"
-              name="gender"
-              required
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            >
-              <option value="">{t('form.selectGender')}</option>
-              <option value="male">{t('form.male')}</option>
-              <option value="female">{t('form.female')}</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="currency" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.currency')}
-            </label>
-            <select
-              id="currency"
-              name="currency"
-              required
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            >
-              <option value="">{t('form.selectCurrency')}</option>
-              <option value="SAR">SAR</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="type" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.type')}
-            </label>
-            <select
-              id="type"
-              name="type"
-              required
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            >
-              <option value="">{t('form.selectType')}</option>
-              <option value="ATM">ATM</option>
-              <option value="POS">POS</option>
-            </select>
-          </div>
+          ))}
         </div>
 
         <div className="flex justify-between items-center">
-          <div className="flex space-x-4">
+          <div className="flex gap-4">
             <button
               type="button"
               onClick={() => router.push(`/${locale}`)}

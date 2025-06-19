@@ -71,6 +71,9 @@
     "deleteConfirmation": "هل أنت متأكد من حذف هذا الجهاز؟",
     "create": "إنشاء",
     "creating": "جاري الإنشاء...",
+    "selectGender": "اختر الجنس",
+    "selectCurrency": "اختر العملة",
+    "selectType": "اختر النوع",
     "create": {
       "title": "إضافة جهاز"
     },

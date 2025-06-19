@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { API_ENDPOINTS, makeApiRequest } from '@/app/lib/api';
 import { User } from '@/app/types';
 import { userTableColumns } from '@/app/constants/tableConfig';
+import FormField from '@/app/[locale]/components/FormField';
 
 export default function EditUserPage() {
   const t = useTranslations('users');
@@ -18,6 +19,16 @@ export default function EditUserPage() {
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    age: '',
+    currency: '',
+    type: ''
+  });
+
   // Fetch user data when component mounts
   useEffect(() => {
     const fetchUser = async () => {
@@ -26,6 +37,16 @@ export default function EditUserPage() {
         const endpoint = API_ENDPOINTS.users.get(parseInt(userId));
         const data = await makeApiRequest<User>(endpoint);
         setUser(data);
+        
+        // Initialize form data with user data
+        setFormData({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          phone: data.phone,
+          age: data.age.toString(),
+          currency: data.currency,
+          type: data.type
+        });
       } catch (error) {
         console.error('Error fetching user:', error);
         setError('Failed to load user data');
@@ -37,19 +58,93 @@ export default function EditUserPage() {
     fetchUser();
   }, [userId]);
 
+  // Form fields configuration
+  const formFields = [
+    {
+      label: t('form.firstName'),
+      name: 'firstName',
+      type: 'text' as const,
+      value: formData.firstName,
+      required: true
+    },
+    {
+      label: t('form.lastName'),
+      name: 'lastName',
+      type: 'text' as const,
+      value: formData.lastName,
+      required: true
+    },
+    {
+      label: t('form.email'),
+      name: 'email',
+      type: 'email' as const,
+      value: user?.email || '',
+      disabled: true
+    },
+    {
+      label: t('form.phone'),
+      name: 'phone',
+      type: 'tel' as const,
+      value: formData.phone,
+      required: true
+    },
+    {
+      label: t('form.age'),
+      name: 'age',
+      type: 'number' as const,
+      value: formData.age,
+      required: true,
+      min: 18,
+      max: 100
+    },
+    {
+      label: t('form.gender'),
+      name: 'gender',
+      type: 'select' as const,
+      value: user?.gender || '',
+      disabled: true,
+      options: [
+        { value: 'male', label: t('form.male') },
+        { value: 'female', label: t('form.female') }
+      ]
+    },
+    {
+      label: t('form.currency'),
+      name: 'currency',
+      type: 'select' as const,
+      value: formData.currency,
+      required: true,
+      options: [
+        { value: 'SAR', label: 'SAR' },
+        { value: 'USD', label: 'USD' },
+        { value: 'EUR', label: 'EUR' }
+      ]
+    },
+    {
+      label: t('form.type'),
+      name: 'type',
+      type: 'select' as const,
+      value: formData.type,
+      required: true,
+      options: [
+        { value: 'ATM', label: 'ATM' },
+        { value: 'POS', label: 'POS' }
+      ]
+    }
+  ];
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const formData = new FormData(e.currentTarget);
     const userData = {
-      firstName: formData.get('firstName'),
-      lastName: formData.get('lastName'),
-      phone: formData.get('phone'),
-      age: parseInt(formData.get('age') as string),
-      currency: formData.get('currency'),
-      type: formData.get('type'),
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phone: formData.phone,
+      age: parseInt(formData.age),
+      currency: formData.currency,
+      type: formData.type,
     };
 
     try {
@@ -72,12 +167,19 @@ export default function EditUserPage() {
     }
   };
 
-  if (loading) {
+  // Handle form field changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  if (loading && !user) {
     return (
       <div className="fixed inset-0 bg-info-dark bg-opacity-90 flex items-center justify-center z-50">
-        <div className="text-white text-lg font-bold">
-          {user ? 'Updating user...' : 'Loading user...'}
-        </div>
+        <div className="text-white text-lg font-bold">Loading user...</div>
       </div>
     );
   }
@@ -147,135 +249,25 @@ export default function EditUserPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.firstName')}
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              required
-              defaultValue={user.firstName}
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
+          {formFields.map((field) => (
+            <FormField
+              key={field.name}
+              label={field.label}
+              name={field.name}
+              type={field.type}
+              value={field.value}
+              onChange={handleChange}
+              required={field.required}
+              disabled={field.disabled}
+              options={field.options}
+              min={field.min}
+              max={field.max}
             />
-          </div>
-
-          <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.lastName')}
-            </label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              required
-              defaultValue={user.lastName}
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.email')}
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              defaultValue={user.email}
-              disabled
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm bg-secondary-light text-text-dark cursor-not-allowed"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.phone')}
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              required
-              defaultValue={user.phone}
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="age" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.age')}
-            </label>
-            <input
-              type="number"
-              id="age"
-              name="age"
-              min="18"
-              max="100"
-              required
-              defaultValue={user.age}
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-          />
-        </div>
-
-          <div>
-            <label htmlFor="gender" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.gender')}
-            </label>
-            <select
-              id="gender"
-              name="gender"
-              required
-              defaultValue={user.gender}
-              disabled
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm bg-secondary-light text-text-dark cursor-not-allowed"
-            >
-              <option value="">{t('form.selectGender')}</option>
-              <option value="male">{t('form.male')}</option>
-              <option value="female">{t('form.female')}</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="currency" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.currency')}
-            </label>
-            <select
-              id="currency"
-              name="currency"
-              required
-              defaultValue={user.currency}
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            >
-              <option value="">{t('form.selectCurrency')}</option>
-              <option value="SAR">SAR</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="type" className="block text-sm font-medium text-info-dark mb-1">
-              {t('form.type')}
-            </label>
-            <select
-              id="type"
-              name="type"
-              required
-              defaultValue={user.type}
-              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
-            >
-              <option value="">{t('form.selectType')}</option>
-              <option value="ATM">ATM</option>
-              <option value="POS">POS</option>
-            </select>
-          </div>
+          ))}
         </div>
 
         <div className="flex justify-between items-center">
-          <div className="flex space-x-4">
+          <div className="flex gap-4">
             <button
               type="button"
               onClick={() => router.push(`/${locale}`)}

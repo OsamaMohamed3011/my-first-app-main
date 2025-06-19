@@ -71,6 +71,9 @@
     "deleteConfirmation": "Are you sure you want to delete this terminal?",
     "create": "Create",
     "creating": "Creating...",
+    "selectGender": "Select gender",
+    "selectCurrency": "Select currency",
+    "selectType": "Select type",
     "create": {
       "title": "Add Terminal"
     },
