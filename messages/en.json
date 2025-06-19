@@ -52,7 +52,9 @@
       "deleting": "Deleting...",
       "deleteConfirmation": "Are you sure you want to delete this user?",
       "cancel": "Cancel",
-      "backToList": "Back to Users List"
+      "backToList": "Back to Users List",
+      "create": "Create",
+      "creating": "Creating..."
     }
   },
   "form": {
