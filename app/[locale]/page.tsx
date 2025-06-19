@@ -6,7 +6,7 @@ export default async function HomePage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-semibold text-secondary-dark mb-6">
+      <h1 className="text-2xl font-semibold text-info-dark mb-6">
         {t('title')}
       </h1>
       <UsersTable />

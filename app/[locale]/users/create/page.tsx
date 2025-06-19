@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useParams } from 'next/navigation';
 import { useState } from 'react';
 import { API_ENDPOINTS, makeApiRequest } from '@/app/lib/api';
+import { userTableColumns } from '@/app/constants/tableConfig';
 
 export default function CreateUserPage() {
   const t = useTranslations('users');
@@ -52,7 +53,7 @@ export default function CreateUserPage() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-[#1B4D3E] bg-opacity-90 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-info-dark bg-opacity-90 flex items-center justify-center z-50">
         <div className="text-white text-lg font-bold">Creating user...</div>
       </div>
     );
@@ -60,9 +61,34 @@ export default function CreateUserPage() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white min-h-screen">
-      <h1 className="text-2xl font-semibold text-[#1B4D3E] mb-6">
+      <h1 className="text-2xl font-semibold text-info-dark mb-6">
         {t('createUser')}
       </h1>
+
+      {/* User Table Mapping - Empty State */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-4 text-info-dark">User Data Mapping</h2>
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-info-light">
+              {userTableColumns.map((col) => (
+                <th key={col.key} className="px-4 py-2 text-info-dark border border-success-main text-center text-sm font-normal">
+                  {col.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="bg-white">
+              {userTableColumns.map((col) => (
+                <td key={col.key} className="px-4 py-2 border border-info-main text-center text-sm text-secondary-main">
+                  {col.key === 'actions' ? 'N/A' : '—'}
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-sm mb-6 text-center">
@@ -73,7 +99,7 @@ export default function CreateUserPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-[#1B4D3E] mb-1">
+            <label htmlFor="firstName" className="block text-sm font-medium text-info-dark mb-1">
               {t('form.firstName')}
             </label>
             <input
@@ -81,12 +107,12 @@ export default function CreateUserPage() {
               id="firstName"
               name="firstName"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#2D7B52] text-gray-900"
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
             />
           </div>
 
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-[#1B4D3E] mb-1">
+            <label htmlFor="lastName" className="block text-sm font-medium text-info-dark mb-1">
               {t('form.lastName')}
             </label>
             <input
@@ -94,12 +120,12 @@ export default function CreateUserPage() {
               id="lastName"
               name="lastName"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#2D7B52] text-gray-900"
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-[#1B4D3E] mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-info-dark mb-1">
               {t('form.email')}
             </label>
             <input
@@ -107,12 +133,12 @@ export default function CreateUserPage() {
               id="email"
               name="email"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#2D7B52] text-gray-900"
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
             />
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-[#1B4D3E] mb-1">
+            <label htmlFor="phone" className="block text-sm font-medium text-info-dark mb-1">
               {t('form.phone')}
             </label>
             <input
@@ -120,12 +146,12 @@ export default function CreateUserPage() {
               id="phone"
               name="phone"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#2D7B52] text-gray-900"
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
             />
           </div>
 
           <div>
-            <label htmlFor="age" className="block text-sm font-medium text-[#1B4D3E] mb-1">
+            <label htmlFor="age" className="block text-sm font-medium text-info-dark mb-1">
               {t('form.age')}
             </label>
             <input
@@ -135,19 +161,19 @@ export default function CreateUserPage() {
               min="18"
               max="100"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#2D7B52] text-gray-900"
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
             />
           </div>
 
           <div>
-            <label htmlFor="gender" className="block text-sm font-medium text-[#1B4D3E] mb-1">
+            <label htmlFor="gender" className="block text-sm font-medium text-info-dark mb-1">
               {t('form.gender')}
             </label>
             <select
               id="gender"
               name="gender"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#2D7B52] text-gray-900"
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
             >
               <option value="">{t('form.selectGender')}</option>
               <option value="male">{t('form.male')}</option>
@@ -156,14 +182,14 @@ export default function CreateUserPage() {
           </div>
 
           <div>
-            <label htmlFor="currency" className="block text-sm font-medium text-[#1B4D3E] mb-1">
+            <label htmlFor="currency" className="block text-sm font-medium text-info-dark mb-1">
               {t('form.currency')}
             </label>
             <select
               id="currency"
               name="currency"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#2D7B52] text-gray-900"
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
             >
               <option value="">{t('form.selectCurrency')}</option>
               <option value="SAR">SAR</option>
@@ -173,14 +199,14 @@ export default function CreateUserPage() {
           </div>
 
           <div>
-            <label htmlFor="type" className="block text-sm font-medium text-[#1B4D3E] mb-1">
+            <label htmlFor="type" className="block text-sm font-medium text-info-dark mb-1">
               {t('form.type')}
             </label>
             <select
               id="type"
               name="type"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#2D7B52] text-gray-900"
+              className="w-full px-3 py-2 border border-secondary-main rounded-sm focus:outline-none focus:ring-1 focus:ring-success-main text-text-dark"
             >
               <option value="">{t('form.selectType')}</option>
               <option value="ATM">ATM</option>
@@ -189,21 +215,23 @@ export default function CreateUserPage() {
           </div>
         </div>
 
-        <div className="flex justify-end space-x-4">
-          <button
-            type="button"
-            onClick={() => router.push(`/${locale}`)}
-            className="px-4 py-2 text-sm border border-[#2D7B52] text-[#2D7B52] rounded-sm hover:bg-gray-50"
-          >
-            {t('form.cancel')}
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-4 py-2 text-sm bg-[#2D7B52] text-white rounded-sm hover:bg-[#236B42] disabled:opacity-50"
-          >
-            {loading ? t('form.saving') : t('form.save')}
-          </button>
+        <div className="flex justify-between items-center">
+          <div className="flex space-x-4">
+            <button
+              type="button"
+              onClick={() => router.push(`/${locale}`)}
+              className="px-4 py-2 text-sm border border-success-main text-success-main rounded-sm hover:bg-info-main"
+            >
+              {t('form.cancel')}
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 text-sm bg-success-main text-white rounded-sm hover:bg-success-dark disabled:opacity-50"
+            >
+              {loading ? t('form.creating') : t('form.create')}
+            </button>
+          </div>
         </div>
       </form>
     </div>

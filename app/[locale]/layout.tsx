@@ -1,13 +1,8 @@
-import { Inter } from 'next/font/google'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
 import { ReactNode } from 'react'
 import clsx from 'clsx'
 import '../globals.css'
-import { LocaleLayoutProps } from '@/app/types'
-
-const inter = Inter({ subsets: ['latin'] })
 
 const locales = ['en', 'ar']
 
@@ -30,7 +25,7 @@ export default async function LocaleLayout({
   let messages
   try {
     messages = (await import(`../../messages/${locale}.json`)).default
-  } catch (error) {
+  } catch {
     notFound()
   }
 

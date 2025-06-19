@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { API_ENDPOINTS, USERS_PER_PAGE, makeApiRequest } from '@/app/lib/api';
 import { transformUsersList } from '@/app/utils/userHelpers';
 import type { User, UsersResponse } from '@/app/types';
@@ -28,13 +28,8 @@ export default function UsersTable() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdatedId, setLastUpdatedId] = useState<number | null>(null);
 
-  // Fetch users when page changes or after an update
-  useEffect(() => {
-    fetchUsers();
-  }, [currentPage, lastUpdatedId]);
-
   // Fetch users from API
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -57,7 +52,12 @@ export default function UsersTable() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage]);
+
+  // Fetch users when page changes or after an update
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers, lastUpdatedId]);
 
   // Handle search
   const handleSearch = (query: string) => {
@@ -85,7 +85,7 @@ export default function UsersTable() {
     try {
       await makeApiRequest(API_ENDPOINTS.users.delete(userId), { method: 'DELETE' });
       setLastUpdatedId(userId); // Triggers refresh
-    } catch (err) {
+    } catch {
       alert('Failed to delete user.');
     }
   };

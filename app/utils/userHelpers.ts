@@ -1,17 +1,41 @@
 import { User, UserFormData } from "../types";
 
+// Define the raw user data type from API
+interface RawUserData {
+  id: number;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  age?: number;
+  address?: Record<string, unknown>;
+  company?: Record<string, unknown>;
+  email?: string;
+  bank?: {
+    iban?: string;
+    currency?: string;
+    cardNumber?: string;
+    cardExpire?: string;
+    cardType?: string;
+  };
+  gender?: string;
+  image?: string;
+  ein?: string;
+  ssn?: string;
+  userAgent?: string;
+}
+
 /**
  * Transforms raw user data from the API into our application's User type
  */
-export function transformUserData(userData: any): User {
+export function transformUserData(userData: RawUserData): User {
   return {
     id: userData.id,
     firstName: userData.firstName,
     lastName: userData.lastName,
     phone: userData.phone || '',
     age: userData.age || 0,
-    address: userData.address || {},
-    company: userData.company || {},
+    address: userData.address as User['address'] || {},
+    company: userData.company as User['company'] || {},
     email: userData.email || `${userData.bank?.iban}@example.com`,
     accountNumber: userData.bank?.iban || '',
     currency: userData.bank?.currency || 'SAR',
@@ -23,7 +47,7 @@ export function transformUserData(userData: any): User {
       cardExpire: userData.bank?.cardExpire || '12/25',
       cardType: userData.bank?.cardType || 'VISA',
     },
-    gender: userData.gender,
+    gender: userData.gender || '',
     image: userData.image || '',
     ein: userData.ein || '',
     ssn: userData.ssn || '',
@@ -34,7 +58,7 @@ export function transformUserData(userData: any): User {
 /**
  * Transforms a list of users from the API
  */
-export function transformUsersList(usersData: any[]): User[] {
+export function transformUsersList(usersData: RawUserData[]): User[] {
   return usersData.map(userData => transformUserData(userData));
 }
 

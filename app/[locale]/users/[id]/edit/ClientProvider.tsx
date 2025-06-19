@@ -5,7 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 interface ClientProviderProps {
   children: React.ReactNode;
   locale: string;
-  messages: any;
+  messages: Record<string, unknown>;
 }
 
 export default function ClientProvider({ children, locale, messages }: ClientProviderProps) {
