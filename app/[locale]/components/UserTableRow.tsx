@@ -2,16 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import type { User } from '@/app/types';
+import type { User, UserTableRowProps } from '@/app/types';
 import { userTableColumns } from '@/app/constants/tableConfig';
 import { useState } from 'react';
-
-interface UserTableRowProps {
-  user: User;
-  index: number;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
-}
 
 export default function UserTableRow({ user, index, onEdit, onDelete }: UserTableRowProps) {
   const t = useTranslations('table');
@@ -30,7 +23,7 @@ export default function UserTableRow({ user, index, onEdit, onDelete }: UserTabl
           </button>
           <button
             onClick={() => setShowConfirm(true)}
-            className="text-error-main hover:text-red-800 transition-colors"
+            className="text-info-dark hover:text-success-main transition-colors"
             title={t('actions.delete')}
           >
             <FaTrash className="w-3.5 h-3.5" />

@@ -82,7 +82,9 @@ export type UsersResponse = {
 // Props for the UserTableRow component
 export type UserTableRowProps = {
   user: User;
-  locale: string;
+  index: number;
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 // Props for the TableHeader component
