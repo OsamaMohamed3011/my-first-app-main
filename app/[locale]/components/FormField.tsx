@@ -1,21 +1,9 @@
 'use client';
 
+import { FormFieldProps } from '@/app/types';
 import { useTranslations } from 'next-intl';
 
-interface FormFieldProps {
-  label: string;
-  name: string;
-  type: 'text' | 'email' | 'tel' | 'number' | 'select';
-  value: string | number;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  required?: boolean;
-  disabled?: boolean;
-  options?: Array<{ value: string; label: string }>;
-  placeholder?: string;
-  min?: number;
-  max?: number;
-  className?: string;
-}
+
 
 export default function FormField({
   label,

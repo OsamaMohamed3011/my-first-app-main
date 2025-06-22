@@ -3,12 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { FaSearch } from 'react-icons/fa';
 import LanguageSwitcher from './LanguageSwitcher';
-
-interface TableHeaderProps {
-  onSearch: (value: string) => void;
-  onAddClick: () => void;
-  isRTL: boolean;
-}
+import type { TableHeaderProps } from '@/app/types';
 
 export default function TableHeader({ onSearch, onAddClick, isRTL }: TableHeaderProps) {
   const t = useTranslations('table');

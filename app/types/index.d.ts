@@ -89,13 +89,9 @@ export type UserTableRowProps = {
 
 // Props for the TableHeader component
 export type TableHeaderProps = {
-  columns: {
-    accountNumber: string;
-    name: string;
-    currency: string;
-    type: string;
-    actions: string;
-  };
+  onSearch: (value: string) => void;
+  onAddClick: () => void;
+  isRTL: boolean;
 }
 
 // Props for the TablePagination component
@@ -170,4 +166,19 @@ export type ColumnConfig = {
   width?: string;
   sortable?: boolean;
   render?: (user: User) => React.ReactNode;
+};
+
+export type FormFieldProps = {
+  label: string;
+  name: string;
+  type: 'text' | 'email' | 'tel' | 'number' | 'select';
+  value: string | number;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  required?: boolean;
+  disabled?: boolean;
+  options?: Array<{ value: string; label: string }>;
+  placeholder?: string;
+  min?: number;
+  max?: number;
+  className?: string;
 };
